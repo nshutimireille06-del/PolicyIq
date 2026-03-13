@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { POLICY_CASES } from './cases';
+import { POLICY_CASES_2 } from './cases2';
 
 const SECTORS = ["All Sectors", "Education", "Healthcare", "Environment", "Drugs", "Taxes", "Technology", "Economy", "Housing", "Energy", "Trade", "Labor", "Immigration", "Justice", "Social Welfare", "Public Health"];
 
@@ -20,7 +21,8 @@ function scorePolicy(text) {
   if (words.length > 50) clarityScore += 6;
   clarityScore = Math.min(clarityScore, 100);
 
-  const scored = POLICY_CASES.map(c => ({ ...c, matches: c.keywords.filter(k => lower.includes(k)).length })).sort((a, b) => b.matches - a.matches);
+  const ALL_CASES = [...POLICY_CASES, ...POLICY_CASES_2];
+const scored = ALL_CASES.map(c => ({ ...c, matches: c.keywords.filter(k => lower.includes(k)).length })).sort((a, b) => b.matches - a.matches);
   const topAnalogs = scored.slice(0, 3);
 
   let psfScore = 35;
