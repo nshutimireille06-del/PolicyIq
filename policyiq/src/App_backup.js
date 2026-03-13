@@ -1,7 +1,29 @@
 import React, { useState } from 'react';
-import { POLICY_CASES } from './cases';
 
-const SECTORS = ["All Sectors", "Education", "Healthcare", "Environment", "Drugs", "Taxes", "Technology", "Economy", "Housing", "Energy", "Trade", "Labor", "Immigration", "Justice", "Social Welfare", "Public Health"];
+import { POLICY_CASES } from './cases';
+  { domain: "Education", country: "Kenya", region: "Africa", title: "Kenya's Free Primary Education (2003)", outcome: "success", keywords: ["education", "school", "learning", "teacher", "student", "curriculum", "access"], lesson: "Rapid access expansion succeeded but strained infrastructure — implementation capacity must match policy ambition." },
+  { domain: "Education", country: "Global", region: "Global", title: "UNESCO Education for All (1990-2015)", outcome: "mixed", keywords: ["education", "school", "global", "access", "quality", "benchmark"], lesson: "Global commitments need strong national accountability mechanisms to translate into real outcomes." },
+  { domain: "Healthcare", country: "Rwanda", region: "Africa", title: "Rwanda's Mutuelle de Santé (1999)", outcome: "success", keywords: ["health", "insurance", "community", "coverage", "hospital", "clinic"], lesson: "Community-based models with low premiums achieved 90%+ coverage — trust and proximity drive uptake." },
+  { domain: "Healthcare", country: "Global", region: "Global", title: "WHO COVAX Initiative (2020)", outcome: "mixed", keywords: ["vaccine", "health", "global", "distribution", "pandemic", "equity"], lesson: "Global health equity requires addressing supply chain and political barriers, not just funding." },
+  { domain: "Environment", country: "Ethiopia", region: "Africa", title: "Ethiopia's Green Legacy (2019)", outcome: "success", keywords: ["environment", "tree", "forest", "climate", "land", "reforestation"], lesson: "Mass mobilization campaigns can produce dramatic results but require long-term institutional follow-through." },
+  { domain: "Environment", country: "Global", region: "Global", title: "Paris Agreement (2015)", outcome: "mixed", keywords: ["climate", "carbon", "emission", "environment", "global", "temperature"], lesson: "International agreements without enforcement mechanisms struggle to achieve binding commitments." },
+  { domain: "Taxes", country: "Ghana", region: "Africa", title: "Ghana's e-Levy (2022)", outcome: "mixed", keywords: ["tax", "mobile", "digital", "revenue", "informal", "economy"], lesson: "Technically sound digital taxes can underperform due to public backlash — behavioral feasibility matters." },
+  { domain: "Taxes", country: "Global", region: "Global", title: "OECD Global Minimum Corporate Tax (2021)", outcome: "ongoing", keywords: ["tax", "corporate", "multinational", "revenue", "global", "reform"], lesson: "Multilateral tax reform is possible but requires sustained political will across competing national interests." },
+  { domain: "Technology", country: "Rwanda", region: "Africa", title: "Rwanda's Drone Delivery/Zipline (2016)", outcome: "success", keywords: ["technology", "drone", "delivery", "health", "innovation", "rural"], lesson: "Leapfrog technology works best when paired with clear government mandate and strong private partnership." },
+  { domain: "Technology", country: "Global", region: "Global", title: "EU AI Act (2024)", outcome: "ongoing", keywords: ["ai", "technology", "regulation", "digital", "algorithm", "data"], lesson: "Risk-based regulation of emerging technology sets global standards but must balance innovation and safety." },
+  { domain: "Economy", country: "Botswana", region: "Africa", title: "Botswana's Mineral Revenue Policy (1970s)", outcome: "success", keywords: ["economy", "revenue", "mineral", "resource", "development", "investment"], lesson: "Resource wealth can drive development when institutions are strong and revenues are strategically invested." },
+  { domain: "Economy", country: "Global", region: "Global", title: "IMF SDR Allocation (2021)", outcome: "success", keywords: ["economy", "finance", "recovery", "global", "currency", "debt"], lesson: "Emergency economic tools work best when deployed quickly and targeted at the most vulnerable economies." },
+  { domain: "Housing", country: "South Africa", region: "Africa", title: "South Africa's RDP Housing (1994)", outcome: "mixed", keywords: ["housing", "home", "shelter", "urban", "poor", "construction"], lesson: "Large-scale housing programmes risk trading quantity for quality — design and location matter as much as numbers." },
+  { domain: "Housing", country: "Global", region: "Global", title: "UN-Habitat New Urban Agenda (2016)", outcome: "ongoing", keywords: ["housing", "urban", "city", "affordable", "infrastructure", "sustainable"], lesson: "Global urban frameworks need strong local implementation capacity to move from commitment to delivery." },
+  { domain: "Energy", country: "Morocco", region: "Africa", title: "Morocco's Noor Solar Complex (2016)", outcome: "success", keywords: ["energy", "solar", "renewable", "electricity", "climate", "power"], lesson: "Bold renewable energy investment pays off when backed by long-term political commitment and strategic location." },
+  { domain: "Trade", country: "Africa", region: "Africa", title: "AfCFTA (2021)", outcome: "ongoing", keywords: ["trade", "africa", "market", "tariff", "economic", "integration"], lesson: "Continental trade integration requires harmonizing regulations across diverse institutional contexts." },
+  { domain: "Labor", country: "South Africa", region: "Africa", title: "South Africa's Employment Equity Act (1998)", outcome: "mixed", keywords: ["labor", "employment", "equity", "discrimination", "workplace", "affirmative"], lesson: "Affirmative action policies require ongoing monitoring and enforcement to achieve lasting structural change." },
+  { domain: "Immigration", country: "Uganda", region: "Africa", title: "Uganda's Refugee Policy (ongoing)", outcome: "success", keywords: ["refugee", "migration", "asylum", "integration", "displacement", "immigration"], lesson: "Self-reliance refugee models outperform camp containment when backed by land access and economic rights." },
+  { domain: "Justice", country: "Rwanda", region: "Africa", title: "Rwanda's Gacaca Courts (2001-2012)", outcome: "mixed", keywords: ["justice", "court", "crime", "community", "accountability", "reconciliation"], lesson: "Community justice mechanisms can process high volumes of cases but must carefully manage trauma and fairness." },
+  { domain: "Social Welfare", country: "Kenya", region: "Africa", title: "Kenya's GiveDirectly UBI Pilot (2016)", outcome: "success", keywords: ["welfare", "cash", "poverty", "income", "transfer", "basic"], lesson: "Unconditional cash transfers improve wellbeing significantly — trust in beneficiaries drives better outcomes." },
+];
+
+const SECTORS = ["All Sectors", "Education", "Healthcare", "Environment", "Taxes", "Technology", "Economy", "Housing", "Energy", "Trade", "Labor", "Immigration", "Justice", "Social Welfare"];
 
 function scorePolicy(text) {
   const lower = text.toLowerCase();
@@ -19,10 +41,8 @@ function scorePolicy(text) {
   if (hasCause) clarityScore += 10;
   if (words.length > 50) clarityScore += 6;
   clarityScore = Math.min(clarityScore, 100);
-
   const scored = POLICY_CASES.map(c => ({ ...c, matches: c.keywords.filter(k => lower.includes(k)).length })).sort((a, b) => b.matches - a.matches);
-  const topAnalogs = scored.slice(0, 3);
-
+  const topAnalogs = scored.slice(0, 2);
   let psfScore = 35;
   if (topAnalogs[0]?.matches > 0) psfScore += topAnalogs[0].matches * 6;
   if (topAnalogs[0]?.outcome === 'success') psfScore += 15;
@@ -30,24 +50,9 @@ function scorePolicy(text) {
   if (hasCause) psfScore += 10;
   if (hasTarget) psfScore += 8;
   psfScore = Math.min(psfScore, 100);
-
   const clarityFeedback = `${!hasProblem ? 'Try stating the root problem more explicitly. ' : 'The problem is reasonably defined. '}${!hasEvidence ? 'Adding data or evidence would strengthen the statement.' : 'Good use of evidence to ground the proposal.'}`;
   const psfFeedback = `${topAnalogs[0]?.matches > 2 ? `Strong alignment with ${topAnalogs[0].domain} domain cases. ` : 'The connection between problem and solution could be more explicit. '}${psfScore < 60 ? 'Consider addressing root causes more directly.' : 'The intervention logic is reasonably well aligned.'}`;
-
-  const impactReport = {
-    economic: topAnalogs[0]?.economicImpact || 'neutral',
-    socialEquity: topAnalogs[0]?.socialEquityImpact || 'neutral',
-    environmental: topAnalogs[0]?.environmentalImpact || 'neutral',
-    political: topAnalogs[0]?.politicalImpact || 'neutral',
-    gender: topAnalogs[0]?.genderImpact || 'neutral',
-    positiveImpacts: topAnalogs[0]?.positiveImpacts || [],
-    negativeImpacts: topAnalogs[0]?.negativeImpacts || [],
-    shortTerm: topAnalogs[0]?.shortTerm || '',
-    longTerm: topAnalogs[0]?.longTerm || '',
-    stakeholders: topAnalogs[0]?.stakeholders || [],
-  };
-
-  return { clarityScore, psfScore, clarityFeedback, psfFeedback, topAnalogs, impactReport };
+  return { clarityScore, psfScore, clarityFeedback, psfFeedback, topAnalogs };
 }
 
 const s = {
@@ -59,7 +64,7 @@ const s = {
   logoText: { fontSize: 26, fontWeight: 'bold', color: '#1a3a6b' },
   logoSub: { fontSize: 11, color: '#555', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 2 },
   nav: { display: 'flex', gap: 8 },
-  navBtn: (active) => ({ background: active ? '#1a3a6b' : 'white', color: active ? 'white' : '#1a3a6b', border: '1px solid #1a3a6b', padding: '7px 18px', fontSize: 12, cursor: 'pointer', letterSpacing: '0.05em', fontFamily: "'Times New Roman', serif" }),
+  navBtn: (active) => ({ background: active ? '#1a3a6b' : 'white', color: active ? 'white' : '#1a3a6b', border: '1px solid #1a3a6b', padding: '7px 18px', fontSize: 12, cursor: 'pointer', letterSpacing: '0.05em' }),
   hero: { background: '#1a3a6b', padding: '36px 40px', color: 'white' },
   heroTitle: { fontSize: 26, fontWeight: 'bold', marginBottom: 8, color: 'white' },
   heroSub: { fontSize: 13, color: '#a8c0e8', lineHeight: 1.6, maxWidth: 580 },
@@ -75,10 +80,8 @@ const s = {
   scoreLabel: { fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#888', margin: '6px 0 10px' },
   barBg: { height: 4, background: '#e5eaf3', marginBottom: 12 },
   scoreText: { fontSize: 12, color: '#444', lineHeight: 1.65 },
-  impactDot: (val) => ({ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: val === 'positive' ? '#2e6b35' : val === 'negative' ? '#9b1c1c' : val === 'mixed' ? '#92400e' : '#888', marginRight: 6 }),
   countryChip: (selected) => ({ display: 'inline-block', margin: '4px', padding: '5px 12px', fontSize: 12, border: `1px solid ${selected ? '#1a3a6b' : '#c8d4e8'}`, background: selected ? '#1a3a6b' : 'white', color: selected ? 'white' : '#333', cursor: 'pointer' }),
   badge: (outcome) => ({ fontSize: 10, padding: '2px 8px', background: outcome === 'success' ? '#e6f4ea' : outcome === 'mixed' ? '#fdf3e0' : '#e8eaf6', color: outcome === 'success' ? '#2e6b35' : outcome === 'mixed' ? '#7d5a0a' : '#3949ab', border: `1px solid ${outcome === 'success' ? '#b8d9bc' : outcome === 'mixed' ? '#f0d494' : '#c5cae9'}` }),
-  stakeholderBadge: (effect) => ({ fontSize: 10, padding: '2px 8px', background: effect === 'wins' ? '#e6f4ea' : effect === 'loses' ? '#fde8e8' : '#fdf3e0', color: effect === 'wins' ? '#2e6b35' : effect === 'loses' ? '#9b1c1c' : '#7d5a0a', border: `1px solid ${effect === 'wins' ? '#b8d9bc' : effect === 'loses' ? '#f5c6c6' : '#f0d494'}` }),
   footer: { background: '#1a3a6b', color: '#a8c0e8', textAlign: 'center', padding: 16, fontSize: 11, marginTop: 40, letterSpacing: '0.06em' },
 };
 
@@ -96,75 +99,10 @@ function ScaleLogo() {
   );
 }
 
-function ImpactReport({ report, analogTitle }) {
-  const dimensions = [
-    { key: 'economic', label: 'Economic Impact' },
-    { key: 'socialEquity', label: 'Social Equity Impact' },
-    { key: 'environmental', label: 'Environmental Impact' },
-    { key: 'political', label: 'Political & Institutional Impact' },
-    { key: 'gender', label: 'Gender Impact' },
-  ];
-
-  return (
-    <div style={s.card}>
-      <span style={s.label}>Impact Report — Based on {analogTitle}</span>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 12, margin: '16px 0' }}>
-        {dimensions.map(d => (
-          <div key={d.key} style={{ textAlign: 'center', padding: 12, background: '#f8f9fc', border: '1px solid #e0e8f4' }}>
-            <div style={s.impactDot(report[d.key])} />
-            <div style={{ fontSize: 10, color: '#1a3a6b', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 6 }}>{d.label}</div>
-            <div style={{ fontSize: 11, fontWeight: 'bold', color: report[d.key] === 'positive' ? '#2e6b35' : report[d.key] === 'negative' ? '#9b1c1c' : '#7d5a0a', marginTop: 4, textTransform: 'capitalize' }}>{report[d.key]}</div>
-          </div>
-        ))}
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 'bold', color: '#2e6b35', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Positive Impacts</div>
-          {report.positiveImpacts.map((p, i) => (
-            <div key={i} style={{ fontSize: 12, color: '#444', lineHeight: 1.6, marginBottom: 6, paddingLeft: 12, borderLeft: '2px solid #2e6b35' }}>{p}</div>
-          ))}
-        </div>
-        <div>
-          <div style={{ fontSize: 11, fontWeight: 'bold', color: '#9b1c1c', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Negative Impacts</div>
-          {report.negativeImpacts.map((n, i) => (
-            <div key={i} style={{ fontSize: 12, color: '#444', lineHeight: 1.6, marginBottom: 6, paddingLeft: 12, borderLeft: '2px solid #9b1c1c' }}>{n}</div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-        <div style={{ background: '#f8f9fc', border: '1px solid #e0e8f4', padding: 16 }}>
-          <div style={{ fontSize: 10, color: '#888', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>Short-Term Outlook</div>
-          <div style={{ fontSize: 12, color: '#333', lineHeight: 1.6 }}>{report.shortTerm}</div>
-        </div>
-        <div style={{ background: '#f8f9fc', border: '1px solid #e0e8f4', padding: 16 }}>
-          <div style={{ fontSize: 10, color: '#888', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>Long-Term Outlook</div>
-          <div style={{ fontSize: 12, color: '#333', lineHeight: 1.6 }}>{report.longTerm}</div>
-        </div>
-      </div>
-
-      <div>
-        <div style={{ fontSize: 11, fontWeight: 'bold', color: '#1a3a6b', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>Stakeholder Analysis</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {report.stakeholders.map((st, i) => (
-            <div key={i} style={{ background: '#f8f9fc', border: '1px solid #e0e8f4', padding: '8px 14px', fontSize: 12 }}>
-              <span style={{ color: '#333' }}>{st.group}</span>
-              <span style={{ ...s.stakeholderBadge(st.effect), marginLeft: 8 }}>{st.effect === 'wins' ? 'Benefits' : st.effect === 'loses' ? 'Harmed' : 'Mixed'}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
   const [tab, setTab] = useState('analyze');
   const [policyText, setPolicyText] = useState('');
   const [result, setResult] = useState(null);
-  const [showImpact, setShowImpact] = useState(false);
   const [selectedSector, setSelectedSector] = useState('All Sectors');
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [submissions, setSubmissions] = useState([]);
@@ -175,7 +113,6 @@ export default function App() {
   const analyzePolicy = () => {
     if (!policyText.trim()) return;
     setResult(scorePolicy(policyText));
-    setShowImpact(false);
   };
 
   const addToComparison = () => {
@@ -186,9 +123,15 @@ export default function App() {
     setCompareLabel('');
   };
 
-  const filteredCases = selectedSector === 'All Sectors' ? POLICY_CASES : POLICY_CASES.filter(c => c.domain === selectedSector);
+  const filteredCases = selectedSector === 'All Sectors'
+    ? POLICY_CASES
+    : POLICY_CASES.filter(c => c.domain === selectedSector);
+
   const countriesInSector = [...new Set(filteredCases.map(c => c.country))];
-  const countryCases = selectedCountry ? filteredCases.filter(c => c.country === selectedCountry) : [];
+
+  const countryCases = selectedCountry
+    ? filteredCases.filter(c => c.country === selectedCountry)
+    : [];
 
   return (
     <div style={s.page}>
@@ -216,11 +159,12 @@ export default function App() {
 
       <div style={s.hero}>
         <h1 style={s.heroTitle}>Is your policy solving the right problem?</h1>
-        <p style={s.heroSub}>Submit any policy proposal and receive a scored assessment of problem clarity and problem–solution fit, benchmarked against 30 documented policy cases across 15 domains.</p>
+        <p style={s.heroSub}>Submit any policy proposal and receive a scored assessment of problem clarity and problem–solution fit, benchmarked against 20 documented policy cases across 14 domains.</p>
       </div>
 
       <div style={s.main}>
 
+        {/* ANALYSIS TAB */}
         {tab === 'analyze' && (
           <>
             {!result ? (
@@ -232,9 +176,8 @@ export default function App() {
               </div>
             ) : (
               <>
-                <button style={{ ...s.outlineBtn, marginBottom: 20 }} onClick={() => { setResult(null); setPolicyText(''); setShowImpact(false); }}>← New Submission</button>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+                <button style={s.outlineBtn} onClick={() => { setResult(null); setPolicyText(''); }}>← New Submission</button>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, margin: '20px 0' }}>
                   <div style={s.scoreCard}>
                     <div style={s.scoreNum}>{result.clarityScore}</div>
                     <div style={s.scoreLabel}>Problem Clarity Score</div>
@@ -257,25 +200,19 @@ export default function App() {
                         <span style={{ fontWeight: 'bold', fontSize: 13, color: '#1a3a6b' }}>{a.title}</span>
                         <span style={s.badge(a.outcome)}>{a.outcome === 'success' ? 'Success' : a.outcome === 'mixed' ? 'Mixed' : 'Ongoing'}</span>
                       </div>
-                      <div style={{ fontSize: 12, color: '#555', lineHeight: 1.6, marginBottom: 8 }}>{a.lesson}</div>
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <button style={{ ...s.outlineBtn, fontSize: 10 }} onClick={() => { setSelectedAnalog(a); setTab('compare'); }}>Compare against this case →</button>
-                        {i === 0 && <button style={{ ...s.outlineBtn, fontSize: 10, background: showImpact ? '#1a3a6b' : 'white', color: showImpact ? 'white' : '#1a3a6b' }} onClick={() => setShowImpact(!showImpact)}>
-                          {showImpact ? 'Hide Impact Report' : 'View Impact Report →'}
-                        </button>}
-                      </div>
+                      <div style={{ fontSize: 12, color: '#555', lineHeight: 1.6 }}>{a.lesson}</div>
+                      <button style={{ ...s.outlineBtn, fontSize: 10, marginTop: 8 }} onClick={() => { setSelectedAnalog(a); setTab('compare'); }}>
+                        Compare against this case →
+                      </button>
                     </div>
                   ))}
                 </div>
-
-                {showImpact && result.impactReport && (
-                  <ImpactReport report={result.impactReport} analogTitle={result.topAnalogs[0]?.title} />
-                )}
               </>
             )}
           </>
         )}
 
+        {/* SECTOR EXPLORER TAB */}
         {tab === 'sectors' && (
           <>
             <div style={s.card}>
@@ -314,12 +251,18 @@ export default function App() {
           </>
         )}
 
+        {/* COMPARE TAB */}
         {tab === 'compare' && (
           <>
             <div style={s.card}>
               <span style={s.label}>Compare Submissions</span>
               <label style={{ fontSize: 13, fontWeight: 'bold', color: '#222', marginTop: 12, display: 'block' }}>Submission label (optional)</label>
-              <input style={{ ...s.textarea, height: 36, marginBottom: 8 }} placeholder="e.g. Uganda Teacher Training Policy" value={compareLabel} onChange={e => setCompareLabel(e.target.value)} />
+              <input
+                style={{ ...s.textarea, height: 36, marginBottom: 8 }}
+                placeholder="e.g. Uganda Teacher Training Policy"
+                value={compareLabel}
+                onChange={e => setCompareLabel(e.target.value)}
+              />
               <label style={{ fontSize: 13, fontWeight: 'bold', color: '#222', display: 'block' }}>Paste policy text</label>
               <textarea style={s.textarea} placeholder="Paste a policy proposal to score and compare..." value={compareText} onChange={e => setCompareText(e.target.value)} />
               <button style={s.btn} onClick={addToComparison}>Add to Comparison →</button>
